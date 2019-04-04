@@ -1,6 +1,5 @@
 package application;
 
-import java.io.IOException;
 import java.sql.*;
 import java.sql.Connection;
 

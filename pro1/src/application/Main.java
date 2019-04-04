@@ -3,7 +3,6 @@ package application;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.Parent;
 import javafx.fxml.FXMLLoader;
 
@@ -28,9 +27,6 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			//connect2sql
-			ContoMysql con = new ContoMysql();
-			con.connect2mysql();
 			//set root
 			chose_root = FXMLLoader.load(getClass().getClassLoader().getResource("chose.fxml"));
 			login_root = FXMLLoader.load(getClass().getClassLoader().getResource("logon.fxml"));

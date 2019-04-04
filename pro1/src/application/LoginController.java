@@ -1,26 +1,17 @@
 package application;
 
 import javafx.scene.control.*;
-import java.io.IOException;
 import java.net.URL;
+import java.util.Date;
 import java.util.ResourceBundle;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.sql.PreparedStatement;
 import java.sql.Connection;
-
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
-import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
+
 
 
 public class LoginController  implements Initializable{
@@ -42,15 +33,19 @@ public class LoginController  implements Initializable{
 	
 	@FXML
 	private void on_back_click() {
+		usrname.clear();
+		password.clear();
 		Main.setChoseUI();
 		//Event.fireEvent(Main.getPrimaryStage(),
 	    		//new WindowEvent(Main.getPrimaryStage(), WindowEvent.WINDOW_CLOSE_REQUEST ));
 	}
+	
 	private void logon() {
 		PreparedStatement pStatement = null;
 		ResultSet rs = null;
 		String gotpassword = "";
 		
+		//connect to mysql
 		ContoMysql con = new ContoMysql();
 		Connection mycon = con.connect2mysql();
 		
@@ -61,7 +56,7 @@ public class LoginController  implements Initializable{
 				sql = "SELECT password from doctor WHERE name=?";
 			}
 			else {
-				sql = "SELECT password from parent WHERE name=?";
+				sql = "SELECT password from patient WHERE name=?";
 			}
 			pStatement = (PreparedStatement)mycon.prepareStatement(sql);
 			pStatement.setString(1, usrname.getText().trim());
@@ -81,6 +76,30 @@ public class LoginController  implements Initializable{
 		}
 		
 		if(password.getText().trim().equals(gotpassword)) {
+			//update datetime
+			Date dnow = new Date();
+			SimpleDateFormat t = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String currentTime = t.format(dnow);
+			try {
+				String temp;
+				//parent or doctor
+				if(ChoseController.flags == 1) {
+					temp = "UPDATE doctor SET last_login_datetime = '%1$s' WHERE name = '%2$s'";
+				}
+				else {
+					temp = "UPDATE patient SET last_login_datetime = '%1$s' WHERE name = '%2$s'";
+				}
+				String up = String.format(temp, currentTime, usrname.getText().trim());
+				pStatement = (PreparedStatement)mycon.prepareStatement(up);
+			}catch(SQLException e1) {
+				e1.printStackTrace();
+			}
+			try {
+				pStatement.executeUpdate();
+			}catch(SQLException e1) {
+				e1.printStackTrace();
+			}
+			//change scene
 			if(ChoseController.flags == 1) {
 				Main.setDoctorUI();
 			}
@@ -89,20 +108,26 @@ public class LoginController  implements Initializable{
 		else {
 			System.out.println("密码错误！");
 		}
+		//close connection
+		try {
+			usrname.clear();
+			password.clear();
+			mycon.close();
+		}catch(SQLException e1) {
+			e1.printStackTrace();
+		}
 	}
 	@FXML
 	private void on_logon_click() {
 		if(usrname.getText().equals("")) {
-			//JOptionPane.showMessageDialog(null, "用户名不能为空，请输入用户名");
 			System.out.println("用户名不能为空，请输入用户名");
 			return;
 		}
 		if(password.getText().equals("")) {
-			//JOptionPane.showMessageDialog(null, "密码不能为空，请输入密码");
 			System.out.println("密码不能为空，请输入密码");
 			return;
 		}
-		//check usrname and password
+		//check usr name and password
 		logon();
 	}	
 }

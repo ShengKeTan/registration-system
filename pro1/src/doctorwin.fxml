@@ -5,24 +5,24 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="422.0" prefWidth="488.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane layoutX="-89.0" layoutY="-100.0" prefHeight="441.0" prefWidth="470.0">
          <children>
-            <SplitPane dividerPositions="0.1976401179941003" layoutX="90.0" layoutY="99.0" orientation="VERTICAL" prefHeight="341.0" prefWidth="381.0">
+            <SplitPane dividerPositions="0.1976401179941003" layoutX="90.0" layoutY="99.0" orientation="VERTICAL" prefHeight="415.0" prefWidth="488.0">
               <items>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="90.0" prefWidth="343.0">
                      <children>
-                        <Label layoutX="117.0" layoutY="25.0" text="点亮生命之光" />
+                        <Label layoutX="204.0" layoutY="31.0" text="点亮生命之光" />
                      </children>
                   </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                      <children>
-                        <TabPane prefHeight="268.0" prefWidth="379.0" tabClosingPolicy="UNAVAILABLE">
+                        <TabPane prefHeight="327.0" prefWidth="488.0" tabClosingPolicy="UNAVAILABLE">
                           <tabs>
                             <Tab text="病人列表">
                               <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="319.0" prefWidth="475.0" />
                               </content>
                             </Tab>
                             <Tab text="收入列表">
