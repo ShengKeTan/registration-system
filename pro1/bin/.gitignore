@@ -1,0 +1,10 @@
+/.DS_Store
+/application/
+/chose.fxml
+/doctorlogin.fxml
+/doctorwin.fxml
+/mysql-connector-java-8.0.11.jar
+/patientlogin.fxml
+/parwin.fxml
+/logon.fxml
+/patwin.fxml

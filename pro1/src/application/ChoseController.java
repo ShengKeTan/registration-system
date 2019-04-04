@@ -2,9 +2,12 @@ package application;
 
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -12,7 +15,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 
-public class ChoseController { 
+public class ChoseController implements Initializable{ 
+	static int flags = 1;
 	@FXML
 	private Button doctorButton;
 	@FXML
@@ -20,39 +24,19 @@ public class ChoseController {
 	
 	@FXML
 	private void on_doctorButton_clicked(){
-		Stage tempStage = (Stage)patientButton.getScene().getWindow();
-		tempStage.close();
-		FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("doctorlogin.fxml"));
-
-		AnchorPane root = new AnchorPane();
-		Scene myScene = new Scene(root);
-		try{
-			myScene.setRoot((Parent)loader.load());
-			Stage newStage = new Stage();
-			newStage.setTitle("医生登陆");
-			newStage.setScene(myScene);
-			newStage.show();
-		}catch(IOException ex){
-			ex.printStackTrace();
-		}
+		flags = 1;  //flags of doctor
+		Main.setLoginUI();
 	}
 
 	@FXML
 	private void on_patientButton_clicked(){
-		Stage tempStage = (Stage)patientButton.getScene().getWindow();
-		tempStage.close();
-		FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("patientlogin.fxml"));
+		flags = 0;  //flags of patient
+		Main.setLoginUI();
+	}
 
-		AnchorPane root = new AnchorPane();
-		Scene myScene = new Scene(root);
-		try{
-			myScene.setRoot((Parent)loader.load());
-			Stage newStage = new Stage();
-			newStage.setTitle("病人登陆");
-			newStage.setScene(myScene);
-			newStage.show();
-		}catch(IOException ex){
-			ex.printStackTrace();
-		}
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		// TODO Auto-generated method stub
+		
 	}
 }
