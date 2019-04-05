@@ -16,6 +16,8 @@ import javafx.fxml.Initializable;
 
 public class LoginController  implements Initializable{
 	
+	static String logonID;
+	
 	@FXML
 	private TextField usrname;
 	@FXML
@@ -76,6 +78,7 @@ public class LoginController  implements Initializable{
 		}
 		
 		if(password.getText().trim().equals(gotpassword)) {
+			logonID = usrname.getText().trim();
 			//update datetime
 			Date dnow = new Date();
 			SimpleDateFormat t = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

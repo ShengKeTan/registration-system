@@ -22,14 +22,16 @@ import impl.org.controlsfx.autocompletion.SuggestionProvider;
 
 public class PatController implements Initializable{
 	
+	static int spe = 1;
+	
 	@FXML
 	private Button quit, clear, ok;
 	@FXML
-	private ComboBox<String> reg_type;
+	private ChoiceBox<String> reg_type;
 	@FXML
 	private TextField dep_name,  doc_name, reg_name;
 	@FXML
-	private TextField pay, needpay, get, num;
+	private TextField pay, need_pay, get, num;
 	
 	//completions ctro
 	private Set<String> autoCompletions;
@@ -38,58 +40,60 @@ public class PatController implements Initializable{
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		//set type of autocomple
-				autoCompletions = new HashSet<>(Arrays.asList("A","B","C"));
-				provider = SuggestionProvider.create(autoCompletions);
-				TextFields.bindAutoCompletion(doc_name, provider);
-				//connect to mysql
-				ContoMysql con = new ContoMysql();
-				Connection mycon = con.connect2mysql();
+		autoCompletions = new HashSet<>(Arrays.asList("A","B","C"));
+		provider = SuggestionProvider.create(autoCompletions);
+		TextFields.bindAutoCompletion(doc_name, provider);
+		//connect to mysql
+		ContoMysql con = new ContoMysql();
+		Connection mycon = con.connect2mysql();
 				
-				PreparedStatement pStatement = null;
-				ResultSet rs = null;
-				LinkedList<String>searchResult = new LinkedList<>();
-				//get department inifo
-				try {
-					String sql = "SELECT * FROM department";
-					pStatement = (PreparedStatement)mycon.prepareStatement(sql);
-				}catch(SQLException e1){
-					e1.printStackTrace();
+		PreparedStatement pStatement = null;
+		ResultSet rs = null;
+		LinkedList<String>searchResult = new LinkedList<>();
+		//get department inifo
+		try {
+			String sql = "SELECT * FROM department";
+			pStatement = (PreparedStatement)mycon.prepareStatement(sql);
+		}catch(SQLException e1){
+			e1.printStackTrace();
+		}
+		try {
+			rs = pStatement.executeQuery();
+			while(rs.next()) {
+				String info1 = rs.getString("depid").trim();
+				String info2 = rs.getString("name").trim();
+				String info3 = rs.getString("py").trim();
+				String info = info1 + " " + info2 + " " + info3;
+				System.out.println(info);
+				searchResult.add(info);
 				}
-				try {
-					rs = pStatement.executeQuery();
-					while(rs.next()) {
-						String info1 = rs.getString("depid").trim();
-						String info2 = rs.getString("name").trim();
-						String info3 = rs.getString("py").trim();
-						String info = info1 + " " + info2 + " " + info3;
-						System.out.println(info);
-						searchResult.add(info);
-					}
-					TextFields.bindAutoCompletion(dep_name, searchResult);
-				}catch(SQLException e1){
-					e1.printStackTrace();
+			TextFields.bindAutoCompletion(dep_name, searchResult);
+			}catch(SQLException e1){
+				e1.printStackTrace();
 				}
 				//close connection
-				try {
-					mycon.close();
-				}catch(SQLException e1){
-					e1.printStackTrace();
-				}
+		try {
+				mycon.close();
+			}catch(SQLException e1){
+				e1.printStackTrace();
+			}
 				
-				//监视号种输入变化
-				reg_type.getSelectionModel().selectedIndexProperty().addListener(new 
-						ChangeListener<Number>() {
-					@Override
-					public void changed(ObservableValue<? extends Number>observable, Number oldValue, Number
+		//监视号种输入变化
+		reg_type.getSelectionModel().selectedIndexProperty().addListener(new 
+				ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number>observable, Number oldValue, Number
 							newValue) {
-						System.out.println(newValue);
-						
-					}
+							System.out.println(newValue);
+							spe = (int)newValue;
+							System.out.println(reg_type.getValue());
+							on_regname_click();
+						}
 				});
-				//监视交款金额变化
-				pay.textProperty().addListener((obs, oldText, newText)->{
-					if(!pay.getText().equals("") && !needpay.getText().equals("")) {
-						Double found = Double.parseDouble(pay.getText()) - Double.parseDouble(needpay.getText().substring(1));
+		//监视交款金额变化
+		pay.textProperty().addListener((obs, oldText, newText)->{
+					if(!pay.getText().equals("") && !need_pay.getText().equals("")) {
+						Double found = Double.parseDouble(pay.getText()) - Double.parseDouble(need_pay.getText().substring(1));
 						if(found >= 0.0) {
 							get.setText(Double.toString(found));
 						}
@@ -101,6 +105,158 @@ public class PatController implements Initializable{
 						get.setText("");
 					}
 				});
+		//监视科室名称变化
+		dep_name.textProperty().addListener((obs, oldText, newText)->{
+			System.out.println(newText);
+			doc_name.clear();
+			reg_name.clear();
+			enter_docname();
+			on_depname_click();
+		});
+	}
+	
+	private void on_depname_click() {
+		if(dep_name.getText().length() > 3) {
+			System.out.println(dep_name.getText());
+			on_regname_click();
+		}
+	}
+	
+	@FXML
+	private void enter_docname() {
+		//connect to mysql
+		ContoMysql con = new ContoMysql();
+		Connection mycon = con.connect2mysql();
+		//prepare to get info
+		PreparedStatement pStatement = null;
+		ResultSet rs = null;
+		LinkedList<String>searchResult = new LinkedList<>();
+		String sql = null;
+		try {
+			if(dep_name.getText().length() > 3) {
+				String temp = "SELECT * FROM doctor WHERE depid = '%1$s'AND speciallist=%2$d";
+				sql = String.format(temp, dep_name.getText().substring(0, 1), spe);
+				System.out.println(sql);
+			}
+			else {
+				sql = "SELECT * FROM doctor";
+			}
+			//get info
+			pStatement = (PreparedStatement)mycon.prepareStatement(sql);
+		}catch(SQLException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			rs = pStatement.executeQuery();
+			while(rs.next()) {
+				String info1 = rs.getString("docid").trim();
+				String info2 = rs.getString("name").trim();
+				String info3 = rs.getString("py").trim();
+				String info = info1 + " " + info2 + " " + info3;
+				System.out.println(info);
+				searchResult.add(info);
+			}
+			Set<String> docAutoCompletions = new HashSet<>(searchResult);
+			provider.clearSuggestions();
+			provider.addPossibleSuggestions(docAutoCompletions);
+			//TextFields.bindAutoCompletion(doc_name, searchResult);
+		}catch(SQLException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			mycon.close();
+		}catch(SQLException e1){
+			e1.printStackTrace();
+		}
+	}
+	
+	@FXML
+	private void on_regname_click() {
+		//connect to mysql
+		ContoMysql con = new ContoMysql();
+		Connection mycon = con.connect2mysql();
+		//prepare to get info
+		PreparedStatement pStatement = null;
+		ResultSet rs = null;
+		LinkedList<String>searchResult = new LinkedList<>();
+		String sql = null;
+		try {
+			if(dep_name.getText().length() > 3) {
+				String temp = "SELECT * FROM register_category WHERE depid = '%1$s'AND speciallist='%2$d'";
+				sql = String.format(temp, dep_name.getText().substring(0, 1), spe);
+				System.out.println(sql);
+			}
+			else {
+				sql = "SELECT * FROM register_category";
+				System.out.println(sql);
+			}
+			//get info
+			pStatement = (PreparedStatement)mycon.prepareStatement(sql);
+		}catch(SQLException e1){
+			e1.printStackTrace();
+		}
+		double need2pay = 0;
+		try {
+			rs = pStatement.executeQuery(); 
+			String price = null;
+			String info = null;
+			while(rs.next()) {
+				String info1 = rs.getString("catid").trim();
+				String info2 = rs.getString("name").trim();
+				String info3 = rs.getString("py").trim();
+				info = info1 + " " + info2 + " " + info3;
+				searchResult.add(info);
+				//get price
+				price = rs.getString("reg_fee").trim();
+				need2pay = Double.parseDouble(price);
+			}
+			reg_name.setText(info);
+			need_pay.setText("$" + price);
+		}catch(SQLException e1) {
+			e1.printStackTrace();
+			}
+		//够不够交
+		String Patient = LoginController.logonID;
+		System.out.println(Patient);
+		try {
+			sql = "SELECT balance FROM patient WHERE name=?";
+			pStatement = (PreparedStatement)mycon.prepareStatement(sql);
+			pStatement.setString(1, Patient);
+		}catch(SQLException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			rs = pStatement.executeQuery();
+			double v = 0;
+			while(rs.next()) {
+				String value = rs.getString("balance").trim();
+				v = Double.parseDouble(value);
+				System.out.println(value);
+			}
+			if(v > need2pay) {
+				double zero = 0.0;
+				String str1 = "账户余额：" + Double.toString(v - zero) + "元";
+				pay.setText(str1);
+				//不允许再次编辑
+				pay.setEditable(false);
+				get.setText("支付后，余额：" + Double.toString(v - need2pay) + "元");
+				get.setEditable(false);
+			}
+			else {
+				pay.setEditable(true);
+				get.setEditable(true);
+				pay.clear();
+				get.clear();
+			}
+			
+		}catch(SQLException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			mycon.close();
+		}catch(SQLException e1){
+			e1.printStackTrace();
+		}
 	}
 	
 	@FXML
@@ -114,12 +270,15 @@ public class PatController implements Initializable{
 		doc_name.clear();
 		reg_name.clear();
 		pay.clear();
-		needpay.clear();
+		need_pay.clear();
 		get.clear();
-		num.clear();
+		//num.clear();
 	}
 	@FXML
 	private void on_ok_click() {
+		//connect to mysql
+		ContoMysql con = new ContoMysql();
+		Connection mycon = con.connect2mysql();
 		
 	}
 	

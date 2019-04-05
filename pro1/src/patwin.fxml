@@ -10,6 +10,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.collections.*?>
 
 <SplitPane dividerPositions="0.1934673366834171" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.PatController">
   <items>
@@ -24,9 +25,16 @@
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
          <children>
             <TextField fx:id="dep_name" layoutX="84.0" layoutY="31.0" prefHeight="17.0" prefWidth="167.0" />
-            <TextField fx:id="doc_name" layoutX="379.0" layoutY="31.0" />
-            <ComboBox fx:id="reg_type" layoutX="84.0" layoutY="88.0" prefHeight="27.0" prefWidth="167.0" />
-            <TextField fx:id="reg_name" layoutX="379.0" layoutY="88.0" />
+            <TextField fx:id="doc_name" layoutX="379.0" layoutY="31.0" onAction="#enter_docname" />
+            <ChoiceBox fx:id="reg_type" layoutX="84.0" layoutY="88.0" prefHeight="27.0" prefWidth="167.0" value = "专家">
+            	<items>
+            		<FXCollections fx:factory="observableArrayList">
+            			<String fx:value="普通"/>
+            			<String fx:value="专家"/>
+            		</FXCollections>
+            	</items>
+            </ChoiceBox>
+            <TextField fx:id="reg_name" layoutX="379.0" layoutY="88.0" onAction="#on_regname_click" />
             <TextField fx:id="pay" layoutX="84.0" layoutY="145.0" />
             <TextField fx:id="need_pay" layoutX="379.0" layoutY="145.0" />
             <TextField fx:id="get" layoutX="85.0" layoutY="203.0" />
