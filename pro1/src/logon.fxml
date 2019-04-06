@@ -12,7 +12,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.LoginController">
    <children>
-      <GridPane layoutX="154.0" layoutY="200.0" prefHeight="79.0" prefWidth="319.0">
+      <GridPane layoutX="155.0" layoutY="167.0" prefHeight="79.0" prefWidth="319.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="290.0" minWidth="10.0" prefWidth="290.0" />
         </columnConstraints>
@@ -32,5 +32,6 @@
          </font>
       </Label>
       <Button fx:id="back" layoutX="353.0" layoutY="324.0" mnemonicParsing="false" onAction="#on_back_click" prefHeight="27.0" prefWidth="92.0" text="&lt;back" />
+      <Label fx:id="la" layoutX="155.0" layoutY="246.0" />
    </children>
 </AnchorPane>

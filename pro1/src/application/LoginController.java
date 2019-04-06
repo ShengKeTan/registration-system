@@ -1,6 +1,8 @@
 package application;
 
 import javafx.scene.control.*;
+import javafx.scene.paint.Color;
+
 import java.net.URL;
 import java.util.Date;
 import java.util.ResourceBundle;
@@ -17,6 +19,7 @@ import javafx.fxml.Initializable;
 public class LoginController  implements Initializable{
 	
 	static String logonID;
+	static String ID;
 	
 	@FXML
 	private TextField usrname;
@@ -27,16 +30,19 @@ public class LoginController  implements Initializable{
 	private Button back;
 	@FXML
 	private Button logon;
+	@FXML
+	private Label la;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
+		la.setTextFill(Color.web("#0076a3"));
 	}
 	
 	@FXML
 	private void on_back_click() {
 		usrname.clear();
 		password.clear();
+		la.setText("");
 		Main.setChoseUI();
 		//Event.fireEvent(Main.getPrimaryStage(),
 	    		//new WindowEvent(Main.getPrimaryStage(), WindowEvent.WINDOW_CLOSE_REQUEST ));
@@ -46,6 +52,8 @@ public class LoginController  implements Initializable{
 		PreparedStatement pStatement = null;
 		ResultSet rs = null;
 		String gotpassword = "";
+		//null usr
+		int flag = 0;
 		
 		//connect to mysql
 		ContoMysql con = new ContoMysql();
@@ -55,10 +63,10 @@ public class LoginController  implements Initializable{
 			String sql;
 			//parent or doctor
 			if(ChoseController.flags == 1) {
-				sql = "SELECT password from doctor WHERE name=?";
+				sql = "SELECT * from doctor WHERE name=?";
 			}
 			else {
-				sql = "SELECT password from patient WHERE name=?";
+				sql = "SELECT * from patient WHERE name=?";
 			}
 			pStatement = (PreparedStatement)mycon.prepareStatement(sql);
 			pStatement.setString(1, usrname.getText().trim());
@@ -67,18 +75,21 @@ public class LoginController  implements Initializable{
 		}
 		try {
 			rs = pStatement.executeQuery();
-			if(rs != null) {
-				rs.next();
+			while(rs.next()) {
+				gotpassword = rs.getString("password").trim();
+				flag = 1;
+				if(ChoseController.flags == 1) ID = rs.getString("docid").trim();
+				else ID = rs.getString("pid").trim();
 			}
-			gotpassword = rs.getString("password").trim();
 			
 		}catch(SQLException e1) {
-			System.out.println("账号不存在！");
 			e1.printStackTrace();
 		}
-		
 		if(password.getText().trim().equals(gotpassword)) {
 			logonID = usrname.getText().trim();
+			la.setText("");
+			usrname.clear();
+			password.clear();
 			//update datetime
 			Date dnow = new Date();
 			SimpleDateFormat t = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -109,12 +120,12 @@ public class LoginController  implements Initializable{
 			else Main.setPatUI();
 		}
 		else {
+			if(flag == 0) la.setText("用户不存在！");
+			else la.setText("密码错误！");
 			System.out.println("密码错误！");
 		}
 		//close connection
 		try {
-			usrname.clear();
-			password.clear();
 			mycon.close();
 		}catch(SQLException e1) {
 			e1.printStackTrace();
@@ -123,10 +134,12 @@ public class LoginController  implements Initializable{
 	@FXML
 	private void on_logon_click() {
 		if(usrname.getText().equals("")) {
+			la.setText("用户名不能为空，请输入用户名");
 			System.out.println("用户名不能为空，请输入用户名");
 			return;
 		}
 		if(password.getText().equals("")) {
+			la.setText("密码不能为空，请输入密码");
 			System.out.println("密码不能为空，请输入密码");
 			return;
 		}

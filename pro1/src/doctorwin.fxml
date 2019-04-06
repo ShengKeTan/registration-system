@@ -5,37 +5,53 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="422.0" prefWidth="488.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="444.0" prefWidth="556.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.DocController">
    <children>
-      <AnchorPane layoutX="-89.0" layoutY="-100.0" prefHeight="441.0" prefWidth="470.0">
+      <AnchorPane layoutX="-89.0" layoutY="-100.0" prefHeight="576.0" prefWidth="647.0">
          <children>
-            <SplitPane dividerPositions="0.1976401179941003" layoutX="90.0" layoutY="99.0" orientation="VERTICAL" prefHeight="415.0" prefWidth="488.0">
+            <SplitPane layoutX="90.0" layoutY="99.0" orientation="VERTICAL" prefHeight="448.0" prefWidth="558.0">
               <items>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="90.0" prefWidth="343.0">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="323.0" prefWidth="556.0">
                      <children>
-                        <Label layoutX="204.0" layoutY="31.0" text="点亮生命之光" />
-                     </children>
-                  </AnchorPane>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
-                     <children>
-                        <TabPane prefHeight="327.0" prefWidth="488.0" tabClosingPolicy="UNAVAILABLE">
+                        <TabPane prefHeight="411.0" prefWidth="558.0" tabClosingPolicy="UNAVAILABLE">
                           <tabs>
-                            <Tab text="病人列表">
-                              <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="319.0" prefWidth="475.0" />
-                              </content>
-                            </Tab>
-                            <Tab text="收入列表">
-                              <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                              </content>
-                            </Tab>
+                            <Tab onSelectionChanged="#showPatinfo" text="病人列表">
+                                 <content>
+                                    <TableView fx:id="patinfo" prefHeight="381.0" prefWidth="558.0">
+                                      <columns>
+                                        <TableColumn fx:id="catid" prefWidth="90.0" text="挂号编号" />
+                                        <TableColumn fx:id="patname" prefWidth="96.0" text="病人名称" />
+                                          <TableColumn fx:id="time" prefWidth="289.0" text="挂号日期和时间" />
+                                          <TableColumn fx:id="type" prefWidth="82.0" text="号种类别" />
+                                      </columns>
+                                    </TableView>
+                                 </content>
+                              </Tab>
+                            <Tab onSelectionChanged="#showIncome" text="收入列表">
+                                 <content>
+                                    <TableView fx:id="incominfo" prefHeight="200.0" prefWidth="200.0">
+                                      <columns>
+                                        <TableColumn fx:id="depname" prefWidth="96.0" text="科室名称" />
+                                        <TableColumn fx:id="docid" prefWidth="96.0" text="医生编号" />
+                                          <TableColumn fx:id="docname" prefWidth="96.0" text="医生名称" />
+                                          <TableColumn fx:id="regtype" prefWidth="96.0" text="号种类别" />
+                                          <TableColumn fx:id="number" prefWidth="87.0" text="挂号人次" />
+                                          <TableColumn fx:id="income" prefWidth="87.0" text="收入合计" />
+                                      </columns>
+                                    </TableView>
+                                 </content>
+                              </Tab>
                           </tabs>
                         </TabPane>
+                        <DatePicker fx:id="date_begin" layoutX="52.0" layoutY="419.0" prefHeight="27.0" prefWidth="222.0" />
+                        <DatePicker fx:id="date_end" layoutX="330.0" layoutY="419.0" prefHeight="27.0" prefWidth="222.0" />
+                        <Label layoutY="424.0" text="起始时间" />
+                        <Label layoutX="278.0" layoutY="424.0" text="截止时间" />
                      </children>
                   </AnchorPane>
               </items>
             </SplitPane>
+            <Button fx:id="quit" layoutX="566.0" layoutY="548.0" mnemonicParsing="false" onAction="#on_quit_click" prefHeight="27.0" prefWidth="78.0" text="退出" />
          </children>
       </AnchorPane>
    </children>

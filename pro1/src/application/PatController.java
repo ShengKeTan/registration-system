@@ -1,11 +1,14 @@
 package application;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
@@ -279,8 +282,112 @@ public class PatController implements Initializable{
 		//connect to mysql
 		ContoMysql con = new ContoMysql();
 		Connection mycon = con.connect2mysql();
-		
+		//pre info
+		String regnum = null;  //reg num
+		String regid = reg_name.getText().substring(0, 1);  //reg id
+		String docid = doc_name.getText().substring(0, 1);	//doc id
+		String patid = LoginController.ID;
+		BigDecimal cost = new BigDecimal(need_pay.getText().substring(1));
+		Date dNow = new Date();
+		SimpleDateFormat regtime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String time = regtime.format(dNow);
+		//read from dbs
+		int totalnum = 0;
+		int maxnum = 0;
+		boolean out = false;
+		//get or insert info
+		PreparedStatement pStatement = null;
+		ResultSet rs = null;
+		String sql = null;
+		try {
+			sql = "SELECT MAX(register.current_reg_count) FROM register, register_category"
+					+ " WHERE register_category.catid = register.catid AND register_category.catid='%1$s'";
+			sql = String.format(sql, regid);
+			pStatement = (PreparedStatement)mycon.prepareStatement(sql);
+			System.out.println(sql);
+		}catch(SQLException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			rs = pStatement.executeQuery();
+			while(rs.next()) {
+				totalnum = rs.getInt("MAX(register.current_reg_count)");
+			}	
+		}catch(SQLException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			sql = "SELECT max_reg_number FROM register_category WHERE register_category.catid='%1$s'";
+			sql = String.format(sql, regid);
+			pStatement = (PreparedStatement)mycon.prepareStatement(sql);
+			System.out.println(sql);
+			rs = pStatement.executeQuery();
+			while(rs.next()) {
+				maxnum = rs.getInt("register_category.max_reg_number");
+				System.out.println(totalnum + " " + maxnum);
+				if(maxnum <= totalnum) {
+					System.out.println("挂号人数已满，挂号失败！");
+					return;
+				}
+				//success
+				totalnum++;
+			}
+		}catch(SQLException e1) {
+			e1.printStackTrace();
+		}
+		//generated regnum
+		try {
+			sql = "SELECT COUNT(*) FROM register";
+			pStatement = (PreparedStatement)mycon.prepareStatement(sql);
+		}catch(SQLException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			rs = pStatement.executeQuery();
+			String getnum = null;
+			while(rs.next()) {
+				getnum = rs.getString("COUNT(*)").trim();
+			}
+			int getnumint = (int)Double.parseDouble(getnum) + 1;
+			regnum = String.format("%06d", getnumint);
+			System.out.println(regnum);
+		}catch(SQLException e1) {
+			e1.printStackTrace();
+		}
+		//insert reg info
+		try {
+			sql = "INSERT INTO register VALUES(?,?,?,?,?,?,?,?)";
+			pStatement = (PreparedStatement)mycon.prepareStatement(sql);
+			System.out.println(sql);
+			pStatement.setString(1, regnum);
+			System.out.println(sql);
+			pStatement.setString(2, regid);
+			pStatement.setString(3, docid);
+			pStatement.setString(4, patid);
+			pStatement.setInt(5, totalnum);
+			pStatement.setBoolean(6, out);
+			pStatement.setBigDecimal(7, cost);
+			pStatement.setString(8, time);
+			System.out.println(sql);
+		}catch(SQLException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			int sure = pStatement.executeUpdate();
+			if(sure > 0) {
+				System.out.println("挂号成功");
+				on_clear_click();
+			}
+			else {
+				System.out.println("挂号失败");
+			}
+		}catch(SQLException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			mycon.close();
+		}catch(SQLException e1){
+			e1.printStackTrace();
+		}
 	}
-	
-
 }
