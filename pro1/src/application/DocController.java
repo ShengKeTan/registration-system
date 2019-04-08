@@ -147,7 +147,6 @@ public class DocController implements Initializable{
 			sql = "SELECT department.name, doctor.docid, doctor.name,"
 					+ " register_category.speciallist, COUNT(*), register.reg_fee,"
 					+ " MIN(register.reg_datetime), MAX(register.reg_datetime)"
-					//+ " sum(register_category.reg_fee), count(doctor.name)"
 					+ " FROM register, doctor, register_category, department"
 					+ " WHERE "
 					+ " doctor.depid=department.depid"

@@ -17,11 +17,13 @@ public class Main extends Application {
 	private Parent login_root = null;
 	private Parent doc_root = null;
 	private Parent pat_root = null;
+	private Parent reg_root = null;
 	//界面窗口
 	private static Scene chose_scene = null;
 	private static Scene logon_scene = null;
 	private static Scene doc_scene = null;
 	private static Scene pat_scene = null;
+	private static Scene reg_scene = null;
 	
 	
 	@Override
@@ -32,11 +34,13 @@ public class Main extends Application {
 			login_root = FXMLLoader.load(getClass().getClassLoader().getResource("logon.fxml"));
 			doc_root = FXMLLoader.load(getClass().getClassLoader().getResource("doctorwin.fxml"));
 			pat_root = FXMLLoader.load(getClass().getClassLoader().getResource("patwin.fxml"));
+			reg_root =  FXMLLoader.load(getClass().getClassLoader().getResource("regnumwin.fxml"));
 			//set scene
 			chose_scene = new Scene(chose_root);
 			logon_scene = new Scene(login_root);
 			doc_scene = new Scene(doc_root);
 			pat_scene = new Scene(pat_root);
+			reg_scene = new Scene(reg_root);
 			//set stage
 			primarystage = primaryStage;
 			setChoseUI(); //first scene chose
@@ -67,6 +71,10 @@ public class Main extends Application {
 	public static void setDoctorUI() {
 		primarystage.setTitle("医生操作台");
 		primarystage.setScene(doc_scene);
+	}
+	public static void setRegnumUI() {
+		primarystage.setTitle("挂号信息");
+		primarystage.setScene(reg_scene);
 	}
 	public static Stage getPrimaryStage() {
 		return primarystage;

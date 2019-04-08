@@ -26,6 +26,12 @@ import impl.org.controlsfx.autocompletion.SuggestionProvider;
 public class PatController implements Initializable{
 	
 	static int spe = 1;
+	static String newba;
+	//pass info to print
+	/*static String ptime = null;
+	static String pregnum = null;
+	static String pdep = null;
+	static String pdocname = null;*/
 	
 	@FXML
 	private Button quit, clear, ok;
@@ -154,6 +160,7 @@ public class PatController implements Initializable{
 			while(rs.next()) {
 				String info1 = rs.getString("docid").trim();
 				String info2 = rs.getString("name").trim();
+				//pdocname = info2;
 				String info3 = rs.getString("py").trim();
 				String info = info1 + " " + info2 + " " + info3;
 				System.out.println(info);
@@ -242,6 +249,7 @@ public class PatController implements Initializable{
 				pay.setText(str1);
 				//不允许再次编辑
 				pay.setEditable(false);
+				newba = Double.toString(v - need2pay);
 				get.setText("支付后，余额：" + Double.toString(v - need2pay) + "元");
 				get.setEditable(false);
 			}
@@ -279,6 +287,7 @@ public class PatController implements Initializable{
 	}
 	@FXML
 	private void on_ok_click() {
+		//pdep = dep_name.getText().substring(2, 5);
 		//connect to mysql
 		ContoMysql con = new ContoMysql();
 		Connection mycon = con.connect2mysql();
@@ -291,6 +300,7 @@ public class PatController implements Initializable{
 		Date dNow = new Date();
 		SimpleDateFormat regtime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String time = regtime.format(dNow);
+		//ptime = time;
 		//read from dbs
 		int totalnum = 0;
 		int maxnum = 0;
@@ -350,6 +360,7 @@ public class PatController implements Initializable{
 			}
 			int getnumint = (int)Double.parseDouble(getnum) + 1;
 			regnum = String.format("%06d", getnumint);
+			//pregnum = regnum;
 			System.out.println(regnum);
 		}catch(SQLException e1) {
 			e1.printStackTrace();
@@ -376,11 +387,27 @@ public class PatController implements Initializable{
 			int sure = pStatement.executeUpdate();
 			if(sure > 0) {
 				System.out.println("挂号成功");
-				on_clear_click();
+				num.setText(regnum);
+				System.out.println(regnum);
+				//Main.setRegnumUI();
+				//on_clear_click();
 			}
 			else {
 				System.out.println("挂号失败");
 			}
+		}catch(SQLException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			sql = "UPDATE patient SET balance=? WHERE name=?";
+			pStatement = (PreparedStatement)mycon.prepareStatement(sql);
+			pStatement.setString(1, newba);
+			pStatement.setString(2, LoginController.logonID);
+		}catch(SQLException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			pStatement.executeUpdate();
 		}catch(SQLException e1) {
 			e1.printStackTrace();
 		}
