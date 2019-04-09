@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
+import javax.swing.event.ChangeListener;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -64,15 +66,25 @@ public class DocController implements Initializable{
 				SimpleStringProperty(cellDate.getValue().getIncom()));
 		date_end.setValue(LocalDate.now());
 		date_begin.setValue(LocalDate.now());
-		//datetmp = date_begin.getValue();
-		//datetmp2 = date_end.getValue();
+		//对日期选择时间进行监听
+		date_begin.setOnAction(event->{
+			patdate.clear();
+			showPatinfo();
+		});
+		date_end.setOnAction(event->{
+			patdate.clear();
+			showPatinfo();
+		});
 	}
 	@FXML
 	public void showPatinfo() {
 		//get time
-		time_begin = date_begin.getValue().toString();
-		time_end = date_end.getValue().toString();
-		/*if(datetmp==null||datetmp2==null)
+		//time_begin = date_begin.getValue().toString();
+		//time_end = date_end.getValue().toString();
+		patdate.clear();
+		datetmp = date_begin.getValue();
+		datetmp2 = date_end.getValue();
+		if(datetmp==null || datetmp2==null)
 		{
 			time_begin = LocalDate.now().toString();
 			time_end = LocalDate.now().toString();
@@ -81,7 +93,7 @@ public class DocController implements Initializable{
 		{
 			time_begin = datetmp.toString();
 			time_end = datetmp2.toString();
-		}*/
+		}
 		time_begin += " 00:00:00";
 		time_end += " 23:59:59";
 		System.out.println(time_begin + " " + time_end);
@@ -102,9 +114,6 @@ public class DocController implements Initializable{
 					+ " AND register.docid='%3$s'";
 			String tt = String.format(sql, time_begin, time_end, LoginController.ID);
 			pStatement = (PreparedStatement)mycon.prepareStatement(tt);
-			//pStatement.setString(1, time_begin);
-			//pStatement.setString(2, time_end);
-			//pStatement.setString(3, LoginController.ID);
 			System.out.println(LoginController.ID);
 			System.out.println(tt);
 		}catch(SQLException e1) {
@@ -140,6 +149,7 @@ public class DocController implements Initializable{
 	}
 	@FXML
 	private void showIncome() {
+		getdate.clear();
 		//connect to mysql
 		ContoMysql con = new ContoMysql();
 		Connection mycon = con.connect2mysql();

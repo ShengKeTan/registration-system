@@ -17,7 +17,7 @@
                           <tabs>
                             <Tab onSelectionChanged="#showPatinfo" text="病人列表">
                                  <content>
-                                    <TableView fx:id="patinfo" prefHeight="381.0" prefWidth="558.0">
+                                    <TableView fx:id="patinfo" onMouseEntered="#showPatinfo" prefHeight="381.0" prefWidth="558.0">
                                       <columns>
                                         <TableColumn fx:id="catid" prefWidth="90.0" text="挂号编号" />
                                         <TableColumn fx:id="patname" prefWidth="96.0" text="病人名称" />
@@ -29,7 +29,7 @@
                               </Tab>
                             <Tab onSelectionChanged="#showIncome" text="收入列表">
                                  <content>
-                                    <TableView fx:id="incominfo" prefHeight="200.0" prefWidth="200.0">
+                                    <TableView fx:id="incominfo" onMouseEntered="#showIncome" prefHeight="200.0" prefWidth="200.0">
                                       <columns>
                                         <TableColumn fx:id="depname" prefWidth="96.0" text="科室名称" />
                                         <TableColumn fx:id="docid" prefWidth="96.0" text="医生编号" />
