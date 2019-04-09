@@ -28,9 +28,9 @@ public class PatController implements Initializable{
 	static int spe = 1;
 	static String newba;
 	//pass info to print
-	/*static String ptime = null;
+	//static String ptime = null;
 	static String pregnum = null;
-	static String pdep = null;
+	/*static String pdep = null;
 	static String pdocname = null;*/
 	
 	@FXML
@@ -360,7 +360,7 @@ public class PatController implements Initializable{
 			}
 			int getnumint = (int)Double.parseDouble(getnum) + 1;
 			regnum = String.format("%06d", getnumint);
-			//pregnum = regnum;
+			pregnum = regnum;
 			System.out.println(regnum);
 		}catch(SQLException e1) {
 			e1.printStackTrace();
@@ -389,7 +389,7 @@ public class PatController implements Initializable{
 				System.out.println("挂号成功");
 				num.setText(regnum);
 				System.out.println(regnum);
-				//Main.setRegnumUI();
+				Main.setRegnumUI();
 				//on_clear_click();
 			}
 			else {

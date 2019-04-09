@@ -62,10 +62,17 @@ public class DocController implements Initializable{
 				SimpleStringProperty(cellDate.getValue().getNumber()));
 		income.setCellValueFactory(cellDate -> new 
 				SimpleStringProperty(cellDate.getValue().getIncom()));
+		date_end.setValue(LocalDate.now());
+		date_begin.setValue(LocalDate.now());
+		//datetmp = date_begin.getValue();
+		//datetmp2 = date_end.getValue();
+	}
+	@FXML
+	public void showPatinfo() {
 		//get time
-		datetmp = date_begin.getValue();
-		datetmp2 = date_end.getValue();
-		if(datetmp==null||datetmp2==null)
+		time_begin = date_begin.getValue().toString();
+		time_end = date_end.getValue().toString();
+		/*if(datetmp==null||datetmp2==null)
 		{
 			time_begin = LocalDate.now().toString();
 			time_end = LocalDate.now().toString();
@@ -74,13 +81,10 @@ public class DocController implements Initializable{
 		{
 			time_begin = datetmp.toString();
 			time_end = datetmp2.toString();
-		}
+		}*/
 		time_begin += " 00:00:00";
 		time_end += " 23:59:59";
 		System.out.println(time_begin + " " + time_end);
-	}
-	@FXML
-	public void showPatinfo() {
 		//connect to mysql
 		ContoMysql con = new ContoMysql();
 		Connection mycon = con.connect2mysql();
@@ -93,15 +97,16 @@ public class DocController implements Initializable{
 					+ " WHERE register.pid=patient.pid" 
 					+ " AND register.catid=register_category.catid"
 					+ " AND register.docid=doctor.docid"
-					//+ " AND register.reg_datetime>=?"
-					//+ " AND register.reg_datatime<=?"
-					+ " AND register.docid=?";
-			pStatement = (PreparedStatement)mycon.prepareStatement(sql);
-			pStatement.setString(1, LoginController.ID);
+					+ " AND register.reg_datetime>='%1$s'"
+					+ " AND register.reg_datetime<='%2$s'"
+					+ " AND register.docid='%3$s'";
+			String tt = String.format(sql, time_begin, time_end, LoginController.ID);
+			pStatement = (PreparedStatement)mycon.prepareStatement(tt);
 			//pStatement.setString(1, time_begin);
 			//pStatement.setString(2, time_end);
+			//pStatement.setString(3, LoginController.ID);
 			System.out.println(LoginController.ID);
-			System.out.println(sql);
+			System.out.println(tt);
 		}catch(SQLException e1) {
 			e1.printStackTrace();
 		}
@@ -166,11 +171,11 @@ public class DocController implements Initializable{
 			String rtype = null;
 			String total = null;
 			String get = null;
-			String beTime = null;
-			String endTime = null;
+			//String beTime = null;
+			//String endTime = null;
 			while(rs.next()) {
-				beTime = rs.getString("MIN(register.reg_datetime)");
-				endTime = rs.getString("MAX(register.reg_datetime)");
+				//beTime = rs.getString("MIN(register.reg_datetime)");
+				//endTime = rs.getString("MAX(register.reg_datetime)");
 				pname = rs.getString("department.name").trim();
 				did = rs.getString("doctor.docid").trim();
 				dname = rs.getString("doctor.name").trim();

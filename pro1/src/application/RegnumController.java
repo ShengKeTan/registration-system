@@ -14,9 +14,9 @@ public class RegnumController implements Initializable{
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
-		/*time.setText(PatController.ptime);
+		//time.setText(PatController.ptime);
 		regnum.setText(PatController.pregnum);
-		dep.setText(PatController.pdep);
+		/*dep.setText(PatController.pdep);
 		if(PatController.spe == 1) type.setText("专家号");
 		else type.setText("普通号");
 		docname.setText(PatController.pdocname);*/
