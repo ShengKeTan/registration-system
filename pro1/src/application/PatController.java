@@ -48,8 +48,7 @@ public class PatController implements Initializable{
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		//set type of autocomple
-		autoCompletions = new HashSet<>(Arrays.asList("A","B","C"));
+		autoCompletions = new HashSet<>(Arrays.asList());
 		provider = SuggestionProvider.create(autoCompletions);
 		TextFields.bindAutoCompletion(doc_name, provider);
 		//connect to mysql

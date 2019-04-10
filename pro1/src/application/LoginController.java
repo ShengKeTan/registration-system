@@ -44,15 +44,13 @@ public class LoginController  implements Initializable{
 		password.clear();
 		la.setText("");
 		Main.setChoseUI();
-		//Event.fireEvent(Main.getPrimaryStage(),
-	    		//new WindowEvent(Main.getPrimaryStage(), WindowEvent.WINDOW_CLOSE_REQUEST ));
 	}
 	
 	private void logon() {
 		PreparedStatement pStatement = null;
 		ResultSet rs = null;
 		String gotpassword = "";
-		//null usr
+		//null usr flags
 		int flag = 0;
 		
 		//connect to mysql
@@ -103,8 +101,11 @@ public class LoginController  implements Initializable{
 				else {
 					temp = "UPDATE patient SET last_login_datetime = '%1$s' WHERE name = '%2$s'";
 				}
-				String up = String.format(temp, currentTime, usrname.getText().trim());
+				String up = String.format(temp, currentTime, logonID);
 				pStatement = (PreparedStatement)mycon.prepareStatement(up);
+				System.out.println(temp);
+				System.out.println(currentTime);
+				System.out.println(logonID);
 			}catch(SQLException e1) {
 				e1.printStackTrace();
 			}

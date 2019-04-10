@@ -9,8 +9,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
-import javax.swing.event.ChangeListener;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -69,11 +67,15 @@ public class DocController implements Initializable{
 		//对日期选择时间进行监听
 		date_begin.setOnAction(event->{
 			patdate.clear();
+			getdate.clear();
 			showPatinfo();
+			showIncome();
 		});
 		date_end.setOnAction(event->{
 			patdate.clear();
+			getdate.clear();
 			showPatinfo();
+			showIncome();
 		});
 	}
 	@FXML
@@ -96,7 +98,6 @@ public class DocController implements Initializable{
 		}
 		time_begin += " 00:00:00";
 		time_end += " 23:59:59";
-		System.out.println(time_begin + " " + time_end);
 		//connect to mysql
 		ContoMysql con = new ContoMysql();
 		Connection mycon = con.connect2mysql();
@@ -114,8 +115,8 @@ public class DocController implements Initializable{
 					+ " AND register.docid='%3$s'";
 			String tt = String.format(sql, time_begin, time_end, LoginController.ID);
 			pStatement = (PreparedStatement)mycon.prepareStatement(tt);
-			System.out.println(LoginController.ID);
-			System.out.println(tt);
+			//System.out.println(LoginController.ID);
+			//System.out.println(tt);
 		}catch(SQLException e1) {
 			e1.printStackTrace();
 		}
@@ -169,7 +170,7 @@ public class DocController implements Initializable{
 					+ " AND register_category.catid=register.catid"
 					+ " GROUP BY doctor.docid, register_category.speciallist, register.reg_fee";
 			pStatement = (PreparedStatement)mycon.prepareStatement(sql);
-			System.out.println(sql);
+			//System.out.println(sql);
 		}catch(SQLException e1) {
 			e1.printStackTrace();
 		}
