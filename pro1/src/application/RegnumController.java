@@ -14,8 +14,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Alert.AlertType;
 
 
 public class RegnumController implements Initializable{
@@ -53,6 +55,7 @@ public class RegnumController implements Initializable{
 							Quitreg oldItem, Quitreg newItem) { 
 						sregnum = newItem.getRegnum();
 						state = newItem.getQuitreg();
+						fee = newItem.getRegfee();
 						System.out.println(sregnum + state); 
 						}
 				});
@@ -121,6 +124,15 @@ public class RegnumController implements Initializable{
 	}
 	@FXML
 	private void on_getback_click() {
+		if(state.equals("不可退")) {
+			System.out.println("该号不可退");
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("Information Dialog");
+			alert.setHeaderText("退号失败！");
+			alert.setContentText("该号已经失效");
+			alert.showAndWait();
+			return;
+		}
 		//connect to mysql
 		ContoMysql con = new ContoMysql();
 		Connection mycon = con.connect2mysql();
@@ -128,11 +140,29 @@ public class RegnumController implements Initializable{
 		PreparedStatement pStatement = null;
 		ResultSet rs = null;
 		String sql = null;
+		String num = null;
 		//update unreg
 		try {
-			sql = "UPDATE register SET register.unreg = '%1$s' WHERE reg_id = '%2$s'";
-			String up = String.format(sql, "0", sregnum);
+			sql = "SELECT current_reg_count FROM register WHERE reg_id=?";
 			pStatement = (PreparedStatement)mycon.prepareStatement(sql);
+			pStatement.setString(1, sregnum);
+			System.out.println(sql);
+		}catch(SQLException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			rs = pStatement.executeQuery();
+			while(rs.next()) {
+				num = rs.getString("current_reg_count");
+				System.out.println(num);
+			}
+		}catch(SQLException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			sql = "UPDATE register SET register.unreg = '%1$s', current_reg_count='%2$s'-1 WHERE reg_id = '%3$s'";
+			String up = String.format(sql, "0", num, sregnum);
+			pStatement = (PreparedStatement)mycon.prepareStatement(up);
 			System.out.println(up);
 		}catch(SQLException e1) {
 			e1.printStackTrace();
@@ -144,9 +174,25 @@ public class RegnumController implements Initializable{
 		}
 		//get back money
 		try {
-			sql = "UPDATE patient SET balance = '%1$s' WHERE pid = '%2$s'";
-			String up = String.format(sql, "0", LoginController.ID);
-			pStatement = (PreparedStatement)mycon.prepareStatement(sql);
+			sql = "UPDATE patient SET balance = balance + '%1$s' WHERE pid = '%2$s'";
+			String up = String.format(sql, fee, LoginController.ID);
+			pStatement = (PreparedStatement)mycon.prepareStatement(up);
+			System.out.println(up);
+		}catch(SQLException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			pStatement.executeUpdate();
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("Information Dialog");
+			alert.setHeaderText("退号成功！");
+			alert.setContentText("退款已返还至余额");
+			alert.showAndWait();
+		}catch(SQLException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			mycon.close();
 		}catch(SQLException e1) {
 			e1.printStackTrace();
 		}

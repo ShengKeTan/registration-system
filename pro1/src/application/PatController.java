@@ -399,7 +399,7 @@ public class PatController implements Initializable{
 				alert.setContentText("编号" + regnum);
 				alert.showAndWait();
 				System.out.println(regnum);
-				//on_clear_click();
+				on_clear_click();
 			}
 			else {
 				System.out.println("挂号失败");

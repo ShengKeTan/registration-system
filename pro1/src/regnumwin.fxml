@@ -26,7 +26,8 @@
             </Tab>
         </tabs>
       </TabPane>
-      <Button layoutX="245.0" layoutY="359.0" mnemonicParsing="false" onAction="#show_regdate" prefHeight="27.0" prefWidth="111.0" text="退号" />
+      <Button layoutX="245.0" layoutY="359.0" mnemonicParsing="false" onAction="#on_getback_click" prefHeight="27.0" prefWidth="111.0" text="退号" />
       <Button layoutX="537.0" layoutY="359.0" mnemonicParsing="false" onAction="#on_back_click" text="Back" />
+      <Button layoutX="481.0" layoutY="359.0" mnemonicParsing="false" onAction="#show_regdate" prefHeight="27.0" prefWidth="49.0" text="刷新" />
    </children>
 </AnchorPane>

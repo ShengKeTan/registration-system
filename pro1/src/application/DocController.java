@@ -28,7 +28,7 @@ public class DocController implements Initializable{
 	//pat info view
 	private ObservableList<Patientpage> patdate = FXCollections.observableArrayList();
 	@FXML private TableView<Patientpage> patinfo;
-	@FXML private TableColumn<Patientpage, String> catid, patname, time, type;
+	@FXML private TableColumn<Patientpage, String> catid, patname, time, type, ureg;
 	//doc income view
 	private ObservableList<Income> getdate = FXCollections.observableArrayList();
 	@FXML private TableView<Income> incominfo;
@@ -50,6 +50,8 @@ public class DocController implements Initializable{
 				SimpleStringProperty(cellDate.getValue().getTime()));
 		type.setCellValueFactory(cellDate -> new 
 				SimpleStringProperty(cellDate.getValue().getType()));
+		ureg.setCellValueFactory(cellDate -> new 
+				SimpleStringProperty(cellDate.getValue().getUreg()));
 		depname.setCellValueFactory(cellDate -> new 
 				SimpleStringProperty(cellDate.getValue().getDepname()));
 		docid.setCellValueFactory(cellDate -> new 
@@ -126,16 +128,22 @@ public class DocController implements Initializable{
 			String name = null;
 			String time = null;
 			String type = null;
+			String unreg = null;
 			while(rs.next()) {
 				catid = rs.getString("reg_id");
 				name = rs.getString("patient.name");
 				time = rs.getString("reg_datetime");
+				//unreg = rs.getString("register.unreg");
 				if(rs.getInt("register_category.speciallist") == 1) {
 					type = "专家号";
 				}
 				else type = "普通号";
-				System.out.println(catid + name + time + type);
-				patdate.add(new Patientpage(catid,name,time,type));
+				if(rs.getString("register.unreg").equals("1")) {
+					unreg = "未退";
+				}
+				else unreg = "已退";
+				System.out.println(catid + name + time + type + unreg);
+				patdate.add(new Patientpage(catid,name,time,type,unreg));
 			}
 		}catch(SQLException e1) {
 			e1.printStackTrace();
@@ -168,6 +176,7 @@ public class DocController implements Initializable{
 					+ " doctor.depid=department.depid"
 					+ " AND register.docid=doctor.docid"
 					+ " AND register_category.catid=register.catid"
+					+ " AND register.unreg='1'"
 					+ " GROUP BY doctor.docid, register_category.speciallist, register.reg_fee";
 			pStatement = (PreparedStatement)mycon.prepareStatement(sql);
 			//System.out.println(sql);
