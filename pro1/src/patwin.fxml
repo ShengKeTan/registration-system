@@ -50,6 +50,7 @@
             <Button fx:id="ok" layoutX="207.0" layoutY="261.0" mnemonicParsing="false" onAction="#on_ok_click" text="确定" />
             <Button fx:id="clear" layoutX="296.0" layoutY="261.0" mnemonicParsing="false" onAction="#on_clear_click" text="清除" />
             <Button fx:id="quit" layoutX="379.0" layoutY="261.0" mnemonicParsing="false" onAction="#on_quit_click" text="退出" />
+            <Button layoutX="463.0" layoutY="261.0" mnemonicParsing="false" onAction="#on_regback_click" prefHeight="27.0" prefWidth="87.0" text="我要退号" />
          </children></AnchorPane>
   </items>
 </SplitPane>

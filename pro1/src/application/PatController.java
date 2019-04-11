@@ -21,6 +21,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import impl.org.controlsfx.autocompletion.SuggestionProvider;
 
 public class PatController implements Initializable{
@@ -303,7 +304,7 @@ public class PatController implements Initializable{
 		//read from dbs
 		int totalnum = 0;
 		int maxnum = 0;
-		boolean out = false;
+		boolean out = true;
 		//get or insert info
 		PreparedStatement pStatement = null;
 		ResultSet rs = null;
@@ -335,6 +336,11 @@ public class PatController implements Initializable{
 				maxnum = rs.getInt("register_category.max_reg_number");
 				System.out.println(totalnum + " " + maxnum);
 				if(maxnum <= totalnum) {
+					Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("Information Dialog");
+					alert.setHeaderText("挂号失败！");
+					alert.setContentText("该号种挂号人数已达上限");
+					alert.showAndWait();
 					System.out.println("挂号人数已满，挂号失败！");
 					return;
 				}
@@ -387,8 +393,12 @@ public class PatController implements Initializable{
 			if(sure > 0) {
 				System.out.println("挂号成功");
 				num.setText(regnum);
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("Information Dialog");
+				alert.setHeaderText("挂号成功！");
+				alert.setContentText("编号" + regnum);
+				alert.showAndWait();
 				System.out.println(regnum);
-				Main.setRegnumUI();
 				//on_clear_click();
 			}
 			else {
@@ -415,5 +425,10 @@ public class PatController implements Initializable{
 		}catch(SQLException e1){
 			e1.printStackTrace();
 		}
+	}
+	@FXML
+	private void on_regback_click() {
+	
+		Main.setRegnumUI();
 	}
 }
