@@ -102,7 +102,7 @@ public class PatController implements Initializable{
 		//监视交款金额变化
 		pay.textProperty().addListener((obs, oldText, newText)->{
 					if(!pay.getText().equals("") && !need_pay.getText().equals("")) {
-						Double found = Double.parseDouble(pay.getText()) - Double.parseDouble(need_pay.getText().substring(1));
+						Double found = Double.parseDouble(pay.getText().substring(8)) - Double.parseDouble(need_pay.getText().substring(1));
 						if(found >= 0.0) {
 							get.setText(Double.toString(found));
 						}
@@ -245,8 +245,8 @@ public class PatController implements Initializable{
 			}
 			if(v > need2pay) {
 				double zero = 0.0;
-				String str1 = "账户余额：" + Double.toString(v - zero) + "元";
-				pay.setText(str1);
+				//String str1 = "账户余额：" + Double.toString(v - zero) + "元";
+				pay.setText("账户余额(元)：" + Double.toString(v - zero));
 				//不允许再次编辑
 				pay.setEditable(false);
 				newba = Double.toString(v - need2pay);

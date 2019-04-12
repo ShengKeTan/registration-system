@@ -86,8 +86,14 @@ public class DocController implements Initializable{
 		//time_begin = date_begin.getValue().toString();
 		//time_end = date_end.getValue().toString();
 		patdate.clear();
-		datetmp = date_begin.getValue();
-		datetmp2 = date_end.getValue();
+		if(date_begin == null || date_end == null) {
+			time_begin = LocalDate.now().toString();
+			time_end = LocalDate.now().toString();
+		}
+		else {
+			datetmp = date_begin.getValue();
+			datetmp2 = date_end.getValue();
+		}
 		if(datetmp==null || datetmp2==null)
 		{
 			time_begin = LocalDate.now().toString();

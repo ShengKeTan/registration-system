@@ -53,10 +53,12 @@ public class RegnumController implements Initializable{
 					@Override 
 					public void changed( ObservableValue<? extends Quitreg> observableValue, 
 							Quitreg oldItem, Quitreg newItem) { 
+						if(newItem != null) {
 						sregnum = newItem.getRegnum();
 						state = newItem.getQuitreg();
 						fee = newItem.getRegfee();
 						System.out.println(sregnum + state); 
+						}
 						}
 				});
 	}
@@ -200,6 +202,7 @@ public class RegnumController implements Initializable{
 	
 	@FXML
 	public void on_back_click() {
+		quitdate.clear();
 		Main.setPatUI();
 	}
 
